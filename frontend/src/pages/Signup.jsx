@@ -10,11 +10,14 @@ import { toast } from 'sonner'
 import auth from "../assets/auth.jpg"
 
 const Signup = () => {
-
+    
+const [loading, setLoading] = useState(false)
+    
     const navigate = useNavigate()
     const [user, setUser] = useState({
         firstName: "",
         lastName: "",
+        userName:"", 
         email: "",
         password: "",
     });
@@ -32,7 +35,7 @@ const Signup = () => {
         console.log(user)
 
         try {
-            const response = await axios.post(`https://mern-blog-ha28.onrender.com/api/v1/user/register`, user, {
+            const response = await axios.post(`https://kgserver-bjy2.onrender.com/api/v1/user/register`, user, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -49,30 +52,9 @@ const Signup = () => {
             toast.error(error.response.data.message)
 
 
-        }
-
-        // try {
-        //     dispatch(setLoading(true))
-        //     const response = await axios.post("", user, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         withCredentials: true,
-        //     });
-        //     if (response.data.success) {
-        //         navigate('/login')
-        //         toast.success(response.data.message)
-        //         // setFormData({ name: "", email: "", password: "", role: "" });
-        //     } else {
-        //         toast(`Error: ${data.message || "Something went wrong"}`);
-        //     }
-        // } catch (error) {
-        //     // toast.error(error.response.data.message);
-        //     console.log(error);
-
-        // } finally {
-        //     dispatch(setLoading(false))
-        // }
+        } finally{
+    setLoading(false);       
+       } 
     };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -85,9 +67,10 @@ const Signup = () => {
             <div className='flex justify-center items-center flex-1 px-4 md:px-0'>
                 <Card className="w-full max-w-md p-6 shadow-lg rounded-2xl dark:bg-gray-800 dark:border-gray-600">
                     <CardHeader>
-                        <CardTitle>
-                            <h1 className="text-center text-xl font-semibold">Create an account</h1>
-                        </CardTitle>
+                        <CardTitle className="text-center text-xl font-semibold">
+                          Create an account
+                         </CardTitle>
+
                         <p className=' mt-2 text-sm font-serif text-center dark:text-gray-300'>Enter your details below to create your account</p>
                     </CardHeader>
                     <CardContent>
@@ -114,6 +97,17 @@ const Signup = () => {
                                         className="dark:border-gray-600 dark:bg-gray-900"
                                     />
                                 </div>
+                                <div>
+                                    <Label>Username</Label>
+                                <Input type="text"
+                               placeholder="username"
+                                name="userName"
+                                 value={user.userName}
+                                 onChange={handleChange}
+                                className="dark:border-gray-600 dark:bg-gray-900"
+                                   />
+                                  </div>
+
                             </div>
                             <div>
                                 <Label>Email</Label>
@@ -143,8 +137,9 @@ const Signup = () => {
                                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
-
-                            <Button type="submit" className="w-full">Sign Up</Button>
+                         <Button type="submit" className="w-full" disabled={loading}>
+                           {loading ? "Signing Up..." : "Sign Up"}
+                         </Button>
                             <p className='text-center text-gray-600 dark:text-gray-300'>Already have an account? <Link to={'/login'}><span className='underline cursor-pointer hover:text-gray-800 dark:hover:text-gray-100'>Sign in</span></Link></p>
                         </form>
                     </CardContent>
